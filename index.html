@@ -8,78 +8,72 @@
 body{
   margin:0;
   height:100vh;
-  background:radial-gradient(circle,#111,#000);
+  background:radial-gradient(circle,#0a0a0a,#000);
   display:flex;
   justify-content:center;
   align-items:center;
   font-family:Arial,Helvetica,sans-serif;
-  color:#00ff66;
 }
 
 .gui{
   width:360px;
-  background:#0b0b0b;
-  border-radius:20px;
+  background:#0e0e0e;
+  border-radius:22px;
   padding:16px;
   text-align:center;
-  box-shadow:0 0 25px #00ff66;
+  box-shadow:0 0 30px #3cff78;
+  color:#3cff78;
 }
 
 .title{
   font-size:22px;
   font-weight:bold;
-  text-shadow:0 0 10px #00ff66;
+  text-shadow:0 0 12px #3cff78;
 }
 
 .flag{
-  font-size:22px;
+  font-size:20px;
   margin:4px 0;
 }
 
 .truck{
   width:100%;
+  margin:10px 0;
   border-radius:14px;
-  margin:8px 0;
+  box-shadow:0 0 18px #3cff78;
 }
 
 .song{
   margin:8px 0;
   font-size:15px;
-  color:#9affc6;
+  color:#a8ffd1;
 }
 
 .controls button{
   margin:6px;
-  padding:10px 18px;
+  padding:12px 18px;
   font-size:16px;
   border-radius:30px;
   border:none;
   cursor:pointer;
-  background:#00ff66;
-  box-shadow:0 0 10px #00ff66;
+  background:#3cff78;
+  box-shadow:0 0 12px #3cff78;
 }
 
 .controls button:hover{
-  background:#33ffaa;
+  background:#5dff95;
 }
 
 input[type=range]{
   width:100%;
-  margin-top:10px;
+  margin-top:12px;
 }
 
 .credit{
   margin-top:10px;
   font-size:13px;
-  color:#00ffaa;
-  opacity:0.85;
-  animation: blink 2s infinite;
-}
-
-@keyframes blink{
-  0%{opacity:1}
-  50%{opacity:.5}
-  100%{opacity:1}
+  color:#6affaa;
+  opacity:0.9;
 }
 </style>
 </head>
@@ -87,14 +81,11 @@ input[type=range]{
 <body>
 
 <div class="gui">
-
   <div class="title">🎺 BASURI VIỆT NAM</div>
   <div class="flag">🇻🇳</div>
 
-  <!-- HÌNH XE TẢI -->
-  <img class="truck"
-    src="https://i.imgur.com/6X4VQ3P.png"
-    alt="Truck">
+  <!-- ẢNH XE TẢI -->
+  <img class="truck" src="Trunk.png" alt="Xe tải Basuri">
 
   <div id="songName" class="song"></div>
 
@@ -114,10 +105,10 @@ input[type=range]{
 
 <script>
 const songs = [
-  "TruMua.mp3",
-  "chobaolau.mp3",
-  "laycaykimmaydo.mp3",
-  "yeuroisaoconphat.mp3"
+  { file: "TruMua.mp3", name: "Trú Mưa" },
+  { file: "chobaolau.mp3", name: "Chờ Bao Lâu" },
+  { file: "laycaykimmaydo.mp3", name: "Lấy Cây Kim May Đồ" },
+  { file: "yeuroisaoconphat.mp3", name: "Yêu Rồi Sao Còn Phạt" }
 ];
 
 let index = 0;
@@ -125,25 +116,13 @@ const audio = document.getElementById("audio");
 const songName = document.getElementById("songName");
 
 function load(){
-  audio.src = songs[index];
-  songName.innerText = "🎵 " + songs[index];
+  audio.src = songs[index].file;
+  songName.innerText = "🎵 " + songs[index].name;
 }
 
-function play(){
-  audio.play();
-}
-
-function next(){
-  index = (index + 1) % songs.length;
-  load();
-  play();
-}
-
-function prev(){
-  index = (index - 1 + songs.length) % songs.length;
-  load();
-  play();
-}
+function play(){ audio.play(); }
+function next(){ index=(index+1)%songs.length; load(); play(); }
+function prev(){ index=(index-1+songs.length)%songs.length; load(); play(); }
 
 load();
 </script>
