@@ -2,30 +2,31 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Basuri V5 Việt Nam</title>
+<title>Basuri V5 Center Stage</title>
 <style>
-  html, body { margin:0; padding:0; overflow:hidden; background:#000; font-family:Arial,sans-serif; }
-  #gui {
-    position:absolute; top:20px; left:20px; width:300px;
-    background:#0e0e0e; padding:16px; border-radius:20px;
-    color:#3cff78; text-align:center; box-shadow:0 0 30px #3cff78;
-  }
-  .neonText{
-    font-size:24px; font-weight:bold; color:#00ffff;
-    text-shadow:0 0 5px #0ff,0 0 10px #0ff,0 0 20px #0ff,0 0 40px #0ff;
-    margin-bottom:10px; animation: glow 1.5s infinite alternate;
-  }
-  @keyframes glow{
-    0% { text-shadow:0 0 5px #0ff,0 0 10px #0ff,0 0 20px #0ff,0 0 40px #0ff; }
-    100% { text-shadow:0 0 15px #0ff,0 0 30px #0ff,0 0 40px #0ff,0 0 60px #0ff; }
-  }
-  .flag{
-    font-size:24px; display:inline-block; animation: wave 1s infinite alternate ease-in-out;
-  }
-  @keyframes wave{ 0%{transform:rotate(0deg);} 50%{transform:rotate(5deg);} 100%{transform:rotate(-5deg);} }
-  .controls button{ margin:5px; padding:8px 12px; border:none; border-radius:20px; background:#3cff78; color:#000; cursor:pointer; }
-  .controls button:hover{ background:#5dff95; }
-  input[type=range]{ width:100%; margin-top:8px; }
+html,body{margin:0;padding:0;overflow:hidden;background:#000;font-family:Arial,sans-serif;}
+#gui{
+  position:absolute; top:20px; left:20px; width:300px;
+  background:#0e0e0e; padding:16px; border-radius:20px;
+  color:#3cff78; text-align:center; box-shadow:0 0 30px #3cff78;
+  z-index:10;
+}
+.neonText{
+  font-size:24px; font-weight:bold; color:#00ffff;
+  text-shadow:0 0 5px #0ff,0 0 10px #0ff,0 0 20px #0ff,0 0 40px #0ff;
+  margin-bottom:10px; animation: glow 1.5s infinite alternate;
+}
+@keyframes glow{
+  0%{text-shadow:0 0 5px #0ff,0 0 10px #0ff,0 0 20px #0ff,0 0 40px #0ff;}
+  100%{text-shadow:0 0 15px #0ff,0 0 30px #0ff,0 0 40px #0ff,0 0 60px #0ff;}
+}
+.flag{
+  font-size:24px; display:inline-block; animation: wave 1s infinite alternate ease-in-out;
+}
+@keyframes wave{0%{transform:rotate(0deg);}50%{transform:rotate(5deg);}100%{transform:rotate(-5deg);}}
+.controls button{margin:5px;padding:8px 12px;border:none;border-radius:20px;background:#3cff78;color:#000;cursor:pointer;}
+.controls button:hover{background:#5dff95;}
+input[type=range]{width:100%; margin-top:8px;}
 </style>
 </head>
 <body>
@@ -34,7 +35,7 @@
   <div class="neonText">BASURI V5</div>
   <div class="flag">🇻🇳</div>
   <div id="songName"></div>
-  <audio id="audio"></audio>
+  <audio id="audio" autoplay></audio>
   <div class="controls">
     <button onclick="prev()">⬅️</button>
     <button onclick="play()">▶</button>
@@ -49,10 +50,9 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/loaders/FontLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/geometries/TextGeometry.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.0/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.js"></script>
 
 <script>
-// ----- Audio setup -----
+// --- DANH SÁCH NHẠC ---
 const songs = [
   {file:"TruMua.mp3",name:"Trú Mưa"},
   {file:"chobaolau.mp3",name:"Chờ Bao Lâu"},
@@ -61,111 +61,101 @@ const songs = [
   {file:"DangEm.mp3",name:"Dáng Em"},
   {file:"Melody.mp3",name:"Melody"},
   {file:"bacphan.mp3",name:"Bạc Phận"},
-  {file:"sunnghiepchuong.mp3",name:"Sự Nghiệp Chướng"},
+  {file:"sunghiepchuong.mp3",name:"Sự Nghiệp Chướng"},
   {file:"songcuocdoimonglunglinh.mp3",name:"Cuộc Đời Mộng Lung Linh"}
 ];
 let index=0;
 const audio=document.getElementById("audio");
 const songName=document.getElementById("songName");
-function load(){ audio.src=songs[index].file; songName.innerText="🎵 "+songs[index].name; }
+function load(){ audio.src=songs[index].file; songName.innerText="🎵 "+songs[index].name; audio.play(); }
 function play(){ audio.play(); }
-function next(){ index=(index+1)%songs.length; load(); play(); }
-function prev(){ index=(index-1+songs.length)%songs.length; load(); play(); }
+function next(){ index=(index+1)%songs.length; load(); }
+function prev(){ index=(index-1+songs.length)%songs.length; load(); }
 load();
 
-// ----- Three.js 3D scene -----
+// --- THREE.JS SCENE ---
 let scene=new THREE.Scene();
 let camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,1000);
-camera.position.set(0,3,8);
+camera.position.set(0,3,12);
 let renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 let controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.enableZoom=false;
 
-// Lights
-const ambient=new THREE.AmbientLight(0xffffff,0.5);
-scene.add(ambient);
-const spot=new THREE.SpotLight(0xffd700,2,15);
-spot.position.set(0,5,5);
-scene.add(spot);
-const musicLight=new THREE.PointLight(0xffd700,2,10);
-musicLight.position.set(0,4,0);
+// --- LIGHTS ---
+scene.add(new THREE.AmbientLight(0xffffff,0.3));
+const musicLight=new THREE.PointLight(0xffd700,2,15);
+musicLight.position.set(0,6,0); // đèn nhấp nháy trên đầu
 scene.add(musicLight);
 
-// Loa/xe tải
-const boxGeo=new THREE.BoxGeometry(1,2,1);
-const boxMat=new THREE.MeshStandardMaterial({color:0x111111,metalness:0.5,roughness:0.2});
-const speaker1=new THREE.Mesh(boxGeo,boxMat);
-const speaker2=speaker1.clone();
-speaker1.position.x=-2;speaker2.position.x=2;
-scene.add(speaker1,speaker2);
-
-// Còi vàng 3D
-const coneGeo=new THREE.ConeGeometry(0.2,0.5,32);
-const coneMat=new THREE.MeshStandardMaterial({color:0xffd700,emissive:0xffd700,metalness:0.6,roughness:0.2});
-const horn1=new THREE.Mesh(coneGeo,coneMat);
-const horn2=horn1.clone();
-horn1.position.set(-1,3,-1); horn2.position.set(1,3,-1);
-horn1.rotation.x=Math.PI/2; horn2.rotation.x=Math.PI/2;
-scene.add(horn1,horn2);
-
-// Chữ 3D neon
+// --- CHỮ 3D ---
 const loader=new THREE.FontLoader();
 loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json',function(font){
-  const textGeo=new THREE.TextGeometry('BASURI V5',{font:font,size:0.8,height:0.2,bevelEnabled:true,bevelThickness:0.03,bevelSize:0.02});
+  const textGeo=new THREE.TextGeometry('BASURI V5',{
+    font:font,size:3,height:0.5,bevelEnabled:true,bevelThickness:0.05,bevelSize:0.03
+  });
   const textMat=new THREE.MeshStandardMaterial({color:0x00ffff,emissive:0x00ffff,metalness:0.5,roughness:0.1});
   const textMesh=new THREE.Mesh(textGeo,textMat);
   textGeo.center();
-  textMesh.position.y=4;
+  textMesh.position.set(0,0,0);
   scene.add(textMesh);
-  gsap.to(textMesh.rotation,{y:Math.PI*2,duration:25,repeat:-1,ease:"linear"});
+  gsap.to(textMesh.rotation,{y:Math.PI*2,duration:20,repeat:-1,ease:"linear"});
 });
 
-// Cờ Việt Nam (plane)
-const flagGeo=new THREE.PlaneGeometry(2,1.2,16,8);
+// --- CÒI VÀNG 3D ---
+const coneGeo=new THREE.ConeGeometry(0.3,0.7,32);
+const coneMat=new THREE.MeshStandardMaterial({color:0xffd700,emissive:0xffd700,metalness:0.5,roughness:0.2});
+const horn1=new THREE.Mesh(coneGeo,coneMat);
+const horn2=new THREE.Mesh(coneGeo,coneMat);
+horn1.position.set(-2,1.5,0); horn2.position.set(2,1.5,0);
+horn1.rotation.x=Math.PI/2; horn2.rotation.x=Math.PI/2;
+scene.add(horn1,horn2);
+
+// --- CỜ VIỆT NAM ---
+const flagGeo=new THREE.PlaneGeometry(4,2.5,20,10);
 const flagMat=new THREE.MeshBasicMaterial({color:0xff0000,side:THREE.DoubleSide});
 const flagMesh=new THREE.Mesh(flagGeo,flagMat);
-flagMesh.position.set(0,3,-3);
+flagMesh.position.set(0,1.5,-3);
 scene.add(flagMesh);
-
-// Animate flag
 const flagVertices=flagGeo.attributes.position.array;
+
+// --- FLAG ANIMATION ---
 let clock=new THREE.Clock();
 function updateFlag(){
   let time=clock.getElapsedTime();
   for(let i=0;i<flagVertices.length;i+=3){
-    flagVertices[i+2]=Math.sin(i*0.5+time*5)*0.05;
+    flagVertices[i+2]=Math.sin(i*0.3+time*5)*0.05;
   }
   flagGeo.attributes.position.needsUpdate=true;
 }
 
-// Tone.js music + lights
-const player=new Tone.Player("https://cdn.jsdelivr.net/gh/namtienonline/audio-sample/beat.mp3").toDestination();
-const fft=new Tone.FFT(32);
-player.connect(fft);
-player.autostart=true;
+// --- AUDIO API NHẠP NHỊP ---
+const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+const source=audioCtx.createMediaElementSource(audio);
+const analyser=audioCtx.createAnalyser();
+source.connect(analyser); analyser.connect(audioCtx.destination);
+analyser.fftSize=64;
+const dataArray=new Uint8Array(analyser.frequencyBinCount);
 
-function updateLight(){
-  const values=fft.getValue();
-  const bass=Math.max(...values)+100;
-  musicLight.intensity=Math.max(bass/50,0.5);
-  const scale=1+Math.max(bass/100,0.05);
-  speaker1.scale.y=speaker2.scale.y=scale;
-  horn1.scale.y=horn2.scale.y=scale*0.5;
+function updateMusicEffects(){
+  analyser.getByteFrequencyData(dataArray);
+  let bass=Math.max(...dataArray)/256; // 0->1
+  musicLight.intensity=1 + bass*4;     // đèn nhấp nháy mạnh
+  horn1.scale.y=horn2.scale.y=1 + bass*0.8; // còi nhún mạnh
 }
 
-// Animate loop
-function animateLoop(){
-  requestAnimationFrame(animateLoop);
-  controls.update();
+// --- ANIMATE LOOP ---
+function animate(){
+  requestAnimationFrame(animate);
   updateFlag();
-  updateLight();
+  updateMusicEffects();
   renderer.render(scene,camera);
 }
-animateLoop();
+animate();
 
-// Resize
-window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight);});
+// --- RESIZE ---
+window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
 </script>
 </body>
 </html>
